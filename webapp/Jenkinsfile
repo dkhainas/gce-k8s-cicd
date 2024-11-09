@@ -1,0 +1,40 @@
+pipeline {
+    agent {
+        label 'smith'
+    }
+
+    stages {
+        stage('Deploy') {
+            environment {
+                TERRAFORM_VERSION = "1.9.6"
+                GOOGLE_PROJECT_ID = "gnutive"
+                CLUSTER_NAME = "test-task-cluster"
+            }
+            steps {
+                cleanWs()
+                git branch: 'main', credentialsId: 'GitHub', url: 'git@github.com:dkhainas/gce-cicd-k8s.git'
+                sh 'ls'
+                dir('webapp') {
+                    sh """
+                    #!/bin/bash
+                    echo "add terraform";
+                    wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip;
+                    unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d ./;
+                    rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip;
+                    echo "add gcloud";
+                    curl -o /tmp/google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz;
+                    tar -xvf /tmp/google-cloud-sdk.tar.gz -C /tmp/;
+                    /tmp/google-cloud-sdk/install.sh -q;
+                    source /tmp/google-cloud-sdk/path.bash.inc;
+                    gcloud config set project ${GOOGLE_PROJECT_ID};
+                    gcloud components install gke-gcloud-auth-plugin;
+                    gcloud container clusters get-credentials ${CLUSTER_NAME} --internal-ip
+                    # gcloud auth activate-service-account --key-file ${GOOGLE_SERVICE_ACCOUNT_KEY};
+                    """
+                    sh './terraform init'
+                    sh './terraform apply'
+                }
+            }
+        }
+    }
+}
