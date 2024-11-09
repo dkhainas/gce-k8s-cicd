@@ -1,0 +1,56 @@
+controller:
+  image:
+    tag: lts-jdk21
+  servicePort: 80
+  installPlugins:
+    - kubernetes
+    - git
+    - blueocean
+    - configuration-as-code
+  jenkinsUrlProtocol: "http"
+  serviceType: LoadBalancer
+  JCasC:
+    securityRealm: |-
+      local:
+        allowsSignup: false
+        enableCaptcha: false
+        users:
+        - id: "admin"
+          name: "Jenkins Admin"
+          password: "admin"
+    authorizationStrategy: |-
+      loggedInUsersCanDoAnything:
+        allowAnonymousRead: false
+#  ingress:
+#    enabled: true
+#    annotations:
+#      kubernetes.io/ingress.class: alb
+#      alb.ingress.kubernetes.io/target-type: ip
+#      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+#      alb.ingress.kubernetes.io/healthcheck-path: /login
+    #      alb.ingress.kubernetes.io/ssl-redirect: "443"
+#    hosts:
+#      - paths:
+#          - path: /
+#            pathType: Prefix
+  agentListenerEnabled: true
+#  agentListenerPort: 50001
+
+agent:
+  enabled: true
+  containerCap: 1
+  websocket: true
+  podName: agent-smith
+  alwaysPullImage: true
+  image:
+    repository: jenkins/inbound-agent
+    tag: lts
+  namespace: jenkins
+  idleMinutes: 10
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 2Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
