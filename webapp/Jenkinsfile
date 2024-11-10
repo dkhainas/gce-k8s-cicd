@@ -6,7 +6,6 @@ pipeline {
     stages {
         stage('Deploy') {
             environment {
-                TERRAFORM_VERSION = "1.9.6"
                 GOOGLE_PROJECT_ID = "gnutive"
                 CLUSTER_NAME = "test-task-cluster"
             }
@@ -14,22 +13,6 @@ pipeline {
                 cleanWs()
                 git branch: 'main', credentialsId: 'GitHub', url: 'git@github.com:dkhainas/gce-k8s-cicd.git'
                 dir('webapp') {
-                    sh """
-                    #!/bin/bash
-                    apt install unzip;
-                    echo "add terraform";
-                    curl -o terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip;
-                    unzip terraform.zip -d ./;
-                    rm terraform.zip;
-                    echo "add gcloud";
-                    curl -o /tmp/google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz;
-                    tar -xvf /tmp/google-cloud-sdk.tar.gz -C /tmp/;
-                    /tmp/google-cloud-sdk/install.sh -q;
-                    source /tmp/google-cloud-sdk/path.bash.inc;
-                    gcloud config set project ${GOOGLE_PROJECT_ID};
-                    gcloud components install gke-gcloud-auth-plugin;
-                    gcloud container clusters get-credentials ${CLUSTER_NAME} --internal-ip;
-                    """
                     sh './terraform init'
                     sh './terraform apply'
                 }

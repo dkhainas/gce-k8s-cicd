@@ -4,6 +4,13 @@ locals {
   controller_service_account = "cicd-controller"
 }
 
+resource "google_artifact_registry_repository" "jenkins_agent" {
+  location      = local.region
+  repository_id = "jenkins-gce-terraform-agent"
+  description   = "Agent Image for deploying to K8S with Terraform"
+  format        = "DOCKER"
+}
+
 resource "helm_release" "jenkins" {
   namespace        = local.namespace
   create_namespace = true
@@ -14,6 +21,16 @@ resource "helm_release" "jenkins" {
   max_history      = 5
 
   values = ["${file("./jenkins.values.yaml")}"]
+
+  set {
+    name  = "jnlpRegistry"
+    value = "${local.region}-docker.pkg.dev"
+  }
+
+  set {
+    name  = "image.repository"
+    value = "${local.project}/${google_artifact_registry_repository.jenkins_agent.name}/agent"
+  }
 
   set {
     name  = "serviceAccount.name"

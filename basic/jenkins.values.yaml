@@ -32,11 +32,8 @@ agent:
   containerCap: 1
   websocket: true
   podName: agent-smith
-  alwaysPullImage: true
+  alwaysPullImage: false
   customJenkinsLabels: [ "smith" ]
-  image:
-    repository: jenkins/inbound-agent
-    tag: latest-jdk21
   namespace: jenkins
   idleMinutes: 10
   resources:

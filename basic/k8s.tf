@@ -11,9 +11,15 @@ resource "google_storage_bucket" "terraform" {
 }
 
 resource "google_storage_bucket_iam_member" "terraform" {
-  bucket  = google_storage_bucket.terraform.name
-  role    = "roles/storage.objectUser"
-  member  = "serviceAccount:${google_service_account.k8s.email}"
+  bucket = google_storage_bucket.terraform.name
+  role   = "roles/storage.objectUser"
+  member = "serviceAccount:${google_service_account.k8s.email}"
+}
+
+resource "google_artifact_registry_repository_iam_member" "registry" {
+  member     = "serviceAccount:${google_service_account.k8s.email}"
+  repository = google_artifact_registry_repository.jenkins_agent.name
+  role       = "roles/artifactregistry.reader"
 }
 
 data "google_container_engine_versions" "gke_version" {
