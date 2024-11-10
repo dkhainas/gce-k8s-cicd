@@ -13,6 +13,8 @@ pipeline {
                 cleanWs()
                 git branch: 'main', credentialsId: 'GitHub', url: 'git@github.com:dkhainas/gce-k8s-cicd.git'
                 dir('webapp') {
+                    sh 'gcloud config set project ${GOOGLE_PROJECT_ID}'
+                    sh 'gcloud container clusters get-credentials ${CLUSTER_NAME} --internal-ip'
                     sh 'terraform init'
                     sh 'terraform apply'
                 }

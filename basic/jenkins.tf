@@ -23,13 +23,13 @@ resource "helm_release" "jenkins" {
   values = ["${file("./jenkins.values.yaml")}"]
 
   set {
-    name  = "jnlpRegistry"
-    value = "${local.region}-docker.pkg.dev"
+    name  = "agent.image.repository"
+    value = "${local.region}-docker.pkg.dev/${local.project}/${google_artifact_registry_repository.jenkins_agent.name}/agent"
   }
 
   set {
-    name  = "image.repository"
-    value = "${local.project}/${google_artifact_registry_repository.jenkins_agent.name}/agent"
+    name  = "agent.image.tag"
+    value = "latest"
   }
 
   set {

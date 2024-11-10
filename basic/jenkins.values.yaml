@@ -32,7 +32,7 @@ agent:
   containerCap: 1
   websocket: true
   podName: agent-smith
-  alwaysPullImage: false
+  alwaysPullImage: true
   customJenkinsLabels: [ "smith" ]
   namespace: jenkins
   idleMinutes: 10

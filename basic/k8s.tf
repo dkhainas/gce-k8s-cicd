@@ -16,10 +16,10 @@ resource "google_storage_bucket_iam_member" "terraform" {
   member = "serviceAccount:${google_service_account.k8s.email}"
 }
 
-resource "google_artifact_registry_repository_iam_member" "registry" {
-  member     = "serviceAccount:${google_service_account.k8s.email}"
+resource "google_artifact_registry_repository_iam_member" "repos" {
   repository = google_artifact_registry_repository.jenkins_agent.name
   role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:${google_service_account.k8s.email}"
 }
 
 data "google_container_engine_versions" "gke_version" {
