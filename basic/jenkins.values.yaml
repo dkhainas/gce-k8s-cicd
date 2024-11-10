@@ -36,7 +36,7 @@ agent:
   customJenkinsLabels: [ "smith" ]
   image:
     repository: jenkins/inbound-agent
-    tag: jdk21
+    tag: latest-jdk21
   namespace: jenkins
   idleMinutes: 10
   resources:

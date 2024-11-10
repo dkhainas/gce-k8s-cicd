@@ -18,9 +18,9 @@ pipeline {
                     sh """
                     #!/bin/bash
                     echo "add terraform";
-                    wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip;
-                    unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d ./;
-                    rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip;
+                    curl -o terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip;
+                    unzip terraform.zip -d ./;
+                    rm terraform.zip;
                     echo "add gcloud";
                     curl -o /tmp/google-cloud-sdk.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz;
                     tar -xvf /tmp/google-cloud-sdk.tar.gz -C /tmp/;
