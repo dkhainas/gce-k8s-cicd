@@ -13,10 +13,10 @@ pipeline {
             steps {
                 cleanWs()
                 git branch: 'main', credentialsId: 'GitHub', url: 'git@github.com:dkhainas/gce-k8s-cicd.git'
-                sh 'ls'
                 dir('webapp') {
                     sh """
                     #!/bin/bash
+                    apt install unzip;
                     echo "add terraform";
                     curl -o terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip;
                     unzip terraform.zip -d ./;
@@ -28,7 +28,7 @@ pipeline {
                     source /tmp/google-cloud-sdk/path.bash.inc;
                     gcloud config set project ${GOOGLE_PROJECT_ID};
                     gcloud components install gke-gcloud-auth-plugin;
-                    gcloud container clusters get-credentials ${CLUSTER_NAME} --internal-ip
+                    gcloud container clusters get-credentials ${CLUSTER_NAME} --internal-ip;
                     """
                     sh './terraform init'
                     sh './terraform apply'
