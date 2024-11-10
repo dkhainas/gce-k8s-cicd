@@ -29,7 +29,6 @@ pipeline {
                     gcloud config set project ${GOOGLE_PROJECT_ID};
                     gcloud components install gke-gcloud-auth-plugin;
                     gcloud container clusters get-credentials ${CLUSTER_NAME} --internal-ip
-                    # gcloud auth activate-service-account --key-file ${GOOGLE_SERVICE_ACCOUNT_KEY};
                     """
                     sh './terraform init'
                     sh './terraform apply'
