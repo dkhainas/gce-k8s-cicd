@@ -57,6 +57,23 @@ resource "helm_release" "jenkins" {
   }
 }
 
+resource "kubernetes_role_binding" "k8s" {
+  metadata {
+    name      = "agent-cicd-k8s"
+    namespace = "default"
+  }
+  subject {
+    kind      = "ServiceAccount"
+    name      = local.agent_service_account
+    namespace = "jenkins"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "admin"
+  }
+}
+
 resource "google_project_iam_member" "container" {
   project = local.project
   role    = "roles/container.developer"
