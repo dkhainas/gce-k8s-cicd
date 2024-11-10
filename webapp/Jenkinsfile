@@ -13,8 +13,8 @@ pipeline {
                 cleanWs()
                 git branch: 'main', credentialsId: 'GitHub', url: 'git@github.com:dkhainas/gce-k8s-cicd.git'
                 dir('webapp') {
-                    sh './terraform init'
-                    sh './terraform apply'
+                    sh 'terraform init'
+                    sh 'terraform apply'
                 }
             }
         }
