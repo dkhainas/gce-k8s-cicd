@@ -12,7 +12,7 @@ pipeline {
             }
             steps {
                 cleanWs()
-                git branch: 'main', credentialsId: 'GitHub', url: 'git@github.com:dkhainas/gce-cicd-k8s.git'
+                git branch: 'main', credentialsId: 'GitHub', url: 'git@github.com:dkhainas/gce-k8s-cicd.git'
                 sh 'ls'
                 dir('webapp') {
                     sh """
